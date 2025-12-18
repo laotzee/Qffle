@@ -3,7 +3,7 @@ from random import shuffle
 from typing import Tuple
 
 FILE_PATH = "resources/most_used_german_words.csv"
-READ_MAX = 30
+READ_MAX = 10000
 
 def read_cards(file):
     """Returns the contents of a csv file as X"""
@@ -27,6 +27,7 @@ def read_cards(file):
             if count == 1:
                 cards["headings"] = (row[0], row[1])
             else:
+                if len(row) < 2: row.append("")
                 cards["cards"].append((row[0], row[1]))
             if count == READ_MAX:
                 return cards
