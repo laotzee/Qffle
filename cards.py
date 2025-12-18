@@ -15,20 +15,14 @@ def read_cards(file):
 
     with open(file) as read_file: #I need to put a guard here
 
-        print(f"file was opened")
-
         reader = csv.reader(read_file)
         cards = {
-            "headings": (),
+            "headings": next(reader),
             "cards": []}
-        count = 0
+
         for row in reader:
-            count += 1
-            if count == 1:
-                cards["headings"] = (row[0], row[1])
-            else:
-                if len(row) < 2: row.append("")
-                cards["cards"].append((row[0], row[1]))
+            if len(row) < 2: row.append("")
+            cards["cards"].append((row[0], row[1]))
             if count == READ_MAX:
                 return cards
         return cards
