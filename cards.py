@@ -5,6 +5,12 @@ from typing import Tuple
 FILE_PATH = "resources/most_used_german_words.csv"
 READ_MAX = 10000
 
+def create_card(text_pair: list):
+    """Returns a tuple containing two strings of a card. If pair is missing
+    an empty value takes its place"""
+    if len(text_pair) < 2: text_pair.append("")
+    return (text_pair[0], text_pair[1])
+
 def read_cards(file):
     """Returns the contents of a csv file as X"""
 
@@ -19,10 +25,8 @@ def read_cards(file):
         cards = {
             "headings": next(reader),
             "cards": []}
-
         for row in reader:
-            if len(row) < 2: row.append("")
-            cards["cards"].append((row[0], row[1]))
+            cards.append(create_card(row))
             if count == READ_MAX:
                 return cards
         return cards
