@@ -27,8 +27,6 @@ def read_cards(file):
             "cards": []}
         for row in reader:
             cards.append(create_card(row))
-            if count == READ_MAX:
-                return cards
         return cards
 
 def shuffle_cards(cards):
