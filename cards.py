@@ -26,7 +26,7 @@ def read_cards(file):
             "headings": next(reader),
             "cards": []}
         for row in reader:
-            cards.append(create_card(row))
+            cards["cards"].append(create_card(row))
         return cards
 
 def shuffle_cards(cards):
