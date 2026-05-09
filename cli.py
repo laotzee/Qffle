@@ -1,4 +1,5 @@
 import os
+import sys
 from cards import read_cards, shuffle_cards
 
 
@@ -10,7 +11,11 @@ def clear_screen():
         os.system("clear")
 
 
-file = input("Absolute path for the cards: ")
+args = sys.argv
+file = args[1] if len(args) > 1 else None
+
+if not file:
+    file = input("Absolute path for the cards: ")
 
 deck = read_cards(file)
 shuffle_cards(deck)
