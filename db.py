@@ -17,3 +17,39 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 class Base(DeclarativeBase):
     pass
+
+
+class Deck(Base):
+    """Models a deck of cards"""
+
+    __tablename__ = "decks"
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    path: Mapped[str] = mapped_column(nullable=False, index=True)
+    last_visited: Mapped[datetime.datetime] = mapped_column(
+        DateTime, default=datetime.datetime.now()
+    )
+    item_count: Mapped[int] = mapped_column(default=0)
+
+    sessions: Mapped[List["Session"]] = relationship("Session", back_populates="deck")
+
+
+class Session(Base):
+    """Models a study session"""
+
+    __tablename__ = "sessions"
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    duration: Mapped[str] = mapped_column(str)
+    errors: Mapped[int] = mapped_column(default=0)
+    item_count: Mapped[int] = mapped_column(default=0)
+    deck_id: Mapped[int] = mapped_column(ForeignKey("decks.id"))
+
+    deck: Mapped["Deck"] = relationship("Deck", back_populates="sessions")
+
+
+def init_db():
+    Base.metadata.create_all(bind=engine)
+
+
+init_db()
+
+db_session = SessionLocal()
