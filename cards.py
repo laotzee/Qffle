@@ -61,6 +61,17 @@ def update_deck(deck: Deck, current_count: int) -> None:
     db_session.commit()
 
 
+def create_deck(path: str, items: int = 0) -> Deck:
+    """
+    Creates a new deck entry in the database.
+    """
+    new_deck = Deck(path=path, item_count=items)
+    db_session.add(new_deck)
+    db_session.commit()
+    db_session.refresh(new_deck)
+    return new_deck
+
+
 if __name__ == "__main__":
     words = read_cards(FILE_PATH)
 #    count = 0
