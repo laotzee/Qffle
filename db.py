@@ -38,7 +38,7 @@ class Session(Base):
 
     __tablename__ = "sessions"
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    duration: Mapped[str] = mapped_column(str)
+    duration: Mapped[str]
     errors: Mapped[int] = mapped_column(default=0)
     item_count: Mapped[int] = mapped_column(default=0)
     deck_id: Mapped[int] = mapped_column(ForeignKey("decks.id"))
