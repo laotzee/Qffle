@@ -48,6 +48,19 @@ def get_deck_by_path(search_path: str) -> Deck | None:
     return db_session.execute(stmt).scalar_one_or_none()
 
 
+def update_deck(deck: Deck, current_count: int) -> None:
+    """
+    Updates a decks 'last_visited' timestamp and its items if they differ from
+    the record
+    """
+    deck.last_visited = datetime.datetime.now(datetime.UTC)
+    if current_count != deck.item_count:
+        deck.item_count = current_count
+
+    db_session.add(deck)
+    db_session.commit()
+
+
 if __name__ == "__main__":
     words = read_cards(FILE_PATH)
 #    count = 0
