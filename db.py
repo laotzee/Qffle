@@ -1,6 +1,6 @@
 import datetime
 from typing import List
-from sqlalchemy import create_engine, ForeignKey, DateTime
+from sqlalchemy import create_engine, ForeignKey, DateTime, func
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
@@ -42,6 +42,9 @@ class Session(Base):
     errors: Mapped[int] = mapped_column(default=0)
     item_count: Mapped[int] = mapped_column(default=0)
     deck_id: Mapped[int] = mapped_column(ForeignKey("decks.id"))
+    created_at: Mapped[datetime.datetime] = mapped_column(
+        insert_default=func.now(),
+    )
 
     deck: Mapped["Deck"] = relationship("Deck", back_populates="sessions")
 
