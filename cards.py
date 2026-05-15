@@ -72,6 +72,34 @@ def create_deck(path: str, items: int = 0) -> Deck:
     return new_deck
 
 
+def create_session(
+    deck: Deck, start_time: datetime.datetime, end_time: datetime.datetime, errors: int
+) -> Session:
+    """
+    Calculates duration, creates a new session linked to a deck, and saves it.
+    """
+    delta = end_time - start_time
+
+    seconds = int(delta.total_seconds())
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    duration_str = f"{hours:02}:{minutes:02}:{seconds:02}"
+
+    new_session = Session(
+        duration=duration_str,
+        errors=errors,
+        item_count=deck.item_count,
+        deck_id=deck.id,
+    )
+
+    db_session.add(new_session)
+    db_session.commit()
+    db_session.refresh(new_session)
+
+    return new_session
+
+
 if __name__ == "__main__":
     words = read_cards(FILE_PATH)
 #    count = 0
