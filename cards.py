@@ -100,6 +100,25 @@ def create_session(
     return new_session
 
 
+def get_best_session(deck_id: int) -> Session | None:
+    """
+    Returns the session instance with the shortest duration
+    for a specific deck. Returns None if no sessions exist.
+    """
+    stmt = (
+        select(Session)
+        .where(Session.deck_id == deck_id)
+        .order_by(
+            Session.errors.asc(),
+            Session.duration.asc(),
+            Session.created_at.desc(),
+        )
+        .limit(1)
+    )
+
+    return db_session.execute(stmt).scalar_one_or_none()
+
+
 if __name__ == "__main__":
     words = read_cards(FILE_PATH)
 #    count = 0
