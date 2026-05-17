@@ -3,7 +3,7 @@ import datetime
 from db import Deck, db_session
 from sqlalchemy import select
 from random import shuffle
-from typing import Tuple
+from db import Session
 
 FILE_PATH = "resources/most_used_german_words.csv"
 READ_MAX = 10000
