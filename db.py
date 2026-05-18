@@ -19,6 +19,14 @@ class Base(DeclarativeBase):
     pass
 
 
+class Card:
+    """Models the question and answer sides of a card"""
+
+    def __init__(self, question: str, answer: str) -> None:
+        self.question = question
+        self.answer = answer
+
+
 class ContentDeck:
     """Models the content of a deck"""
 
