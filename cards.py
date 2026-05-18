@@ -25,12 +25,16 @@ def read_cards(file):
     elif file[-4:].lower() != ".csv":
         return file
 
-    with open(file) as read_file:  # I need to put a guard here
-        reader = csv.reader(read_file)
-        cards = {"headings": next(reader), "cards": []}
-        for row in reader:
-            cards["cards"].append(create_card(row))
-        return cards
+    try:
+        with open(file) as read_file:
+            reader = csv.reader(read_file)
+            cards = {"headings": next(reader), "cards": []}
+            for row in reader:
+                cards["cards"].append(create_card(row))
+            return cards
+    except FileNotFoundError:
+        print(f"'{file}' does not exist")
+        return None
 
 
 def shuffle_cards(cards):
