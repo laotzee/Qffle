@@ -1,4 +1,5 @@
 import datetime
+from random import shuffle
 from typing import List
 from sqlalchemy import create_engine, ForeignKey, DateTime, func
 from sqlalchemy.orm import (
@@ -39,6 +40,8 @@ class ContentDeck:
         self.question_header = question_header
         self.answer_header = answer_header
         self.cards = cards
+        self.deck_len = len(self.cards)
+        shuffle(self.cards)
 
 
 class Deck(Base):
