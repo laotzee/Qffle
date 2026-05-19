@@ -1,47 +1,45 @@
 import csv
 import datetime
-from db import Deck, db_session
+from db import Deck, Card, ContentDeck, db_session
 from sqlalchemy import select
-from random import shuffle
 from db import Session
 
 FILE_PATH = "resources/most_used_german_words.csv"
 READ_MAX = 10000
 
 
-def create_card(text_pair: list):
-    """Returns a tuple containing two strings of a card. If pair is missing
-    an empty value takes its place"""
-    if len(text_pair) < 2:
-        text_pair.append("")
-    return (text_pair[0], text_pair[1])
+def create_card(card_data: list):
+    """Returns a Card from the card_data. If card_data is not a pair, an empty
+    string will be used as placeholder"""
+    if len(card_data) < 2:
+        card_data.append("")
+    return Card(question=card_data[0], answer=card_data[1])
 
 
-def read_cards(file):
-    """Returns the contents of a csv file as X"""
+def read_cards(file: str) -> ContentDeck | None:
+    """Returns the contents of a csv file with question-answer pairs as a
+    DeckContent instance, or None if the file had not the .csv extention or
+    did not exist"""
 
-    if type(file) == tuple:
-        return file
-    elif file[-4:].lower() != ".csv":
-        return file
+    if file[-4:].lower() != ".csv":
+        return None
 
     try:
         with open(file) as read_file:
             reader = csv.reader(read_file)
-            cards = {"headings": next(reader), "cards": []}
-            for row in reader:
-                cards["cards"].append(create_card(row))
-            return cards
+            headings = next(reader)
+            cards = []
+            for card_data in reader:
+                cards.append(create_card(card_data))
+
+            deck_content = ContentDeck(
+                question_header=headings[0],
+                answer_header=headings[1],
+                cards=cards,
+            )
+            return deck_content
     except FileNotFoundError:
-        print(f"'{file}' does not exist")
         return None
-
-
-def shuffle_cards(cards):
-    """Randomize the order of the cards"""
-
-    if type(cards) == dict:
-        shuffle(cards["cards"])
 
 
 def get_deck_by_path(search_path: str) -> Deck | None:
