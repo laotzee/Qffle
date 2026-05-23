@@ -30,7 +30,8 @@ def read_cards(file: str) -> ContentDeck | None:
             headings = next(reader)
             cards = []
             for card_data in reader:
-                cards.append(create_card(card_data))
+                if card_data:
+                    cards.append(create_card(card_data))
 
             deck_content = ContentDeck(
                 question_header=headings[0],
