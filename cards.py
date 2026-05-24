@@ -113,6 +113,7 @@ def get_best_session(deck_id: int) -> Session | None:
         select(Session)
         .where(Session.deck_id == deck_id)
         .order_by(
+            Session.item_count.desc(),
             Session.errors.asc(),
             Session.duration.asc(),
             Session.created_at.desc(),
