@@ -56,6 +56,10 @@ def start_session(deck: Deck, deck_content: ContentDeck):
     pending_cards = []
     error_cards = set()
 
+    inverse = input("(1) regular (2) inverse\n")
+    if inverse == "2":
+        deck_content.reverse_order()
+
     start = datetime.datetime.now()
     while deck_content.cards:
         clear_screen()
@@ -63,7 +67,7 @@ def start_session(deck: Deck, deck_content: ContentDeck):
             card = pending_cards.pop()
             print("Invalid input, just use 1 or 0")
         else:
-            card = deck_content.cards.pop(0)
+            card = deck_content.next()
         print("================================\n")
         print(f"{deck_content.question_header}\n")
         print(f"{card.question}\n")
@@ -79,6 +83,7 @@ def start_session(deck: Deck, deck_content: ContentDeck):
             points += 1
         elif answer.isdigit() and answer == "2":
             deck_content.cards.append(card)
+            deck_content.shuffle()
             error_cards.add(card)
             mistakes += 1
         else:
