@@ -46,20 +46,24 @@ class ContentDeck:
         self.answer_header = answer_header
         self.cards = cards
         self.deck_len = len(self.cards)
-        self.is_reverse = False
-        shuffle(self.cards)
+        self.shuffle()
 
     def reverse_order(self):
         """Flips the order of the cards"""
-        self.is_reverse = True
+        self.question_header, self.answer_header = (
+            self.answer_header,
+            self.question_header,
+        )
+        for card in self.cards:
+            card.swap_places()
         return self
 
     def next(self) -> Card:
         """Return the next Card"""
-        if self.is_reverse:
-            return self.cards.pop().swap_places()
-        else:
-            return self.cards.pop()
+        return self.cards.pop()
+
+    def shuffle(self):
+        return shuffle(self.cards)
 
 
 class Deck(Base):
