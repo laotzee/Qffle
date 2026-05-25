@@ -1,7 +1,7 @@
 import datetime
 from random import shuffle
 from typing import List
-from sqlalchemy import create_engine, ForeignKey, DateTime, func
+from sqlalchemy import Boolean, create_engine, ForeignKey, DateTime, func
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
@@ -94,6 +94,7 @@ class Session(Base):
     )
 
     deck: Mapped["Deck"] = relationship("Deck", back_populates="sessions")
+    is_inverted: Mapped[bool] = mapped_column(default=False)
 
 
 def init_db():
