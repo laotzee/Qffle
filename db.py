@@ -27,6 +27,11 @@ class Card:
         self.question = question
         self.answer = answer
 
+    def swap_places(self):
+        """Answer and question change places"""
+        self.question, self.answer = self.answer, self.question
+        return self
+
 
 class ContentDeck:
     """Models the content of a deck"""
@@ -41,7 +46,20 @@ class ContentDeck:
         self.answer_header = answer_header
         self.cards = cards
         self.deck_len = len(self.cards)
+        self.is_reverse = False
         shuffle(self.cards)
+
+    def reverse_order(self):
+        """Flips the order of the cards"""
+        self.is_reverse = True
+        return self
+
+    def next(self) -> Card:
+        """Return the next Card"""
+        if self.is_reverse:
+            return self.cards.pop().swap_places()
+        else:
+            return self.cards.pop()
 
 
 class Deck(Base):
