@@ -77,7 +77,11 @@ def create_deck(path: str, items: int = 0) -> Deck:
 
 
 def create_session(
-    deck: Deck, start_time: datetime.datetime, end_time: datetime.datetime, errors: int
+    deck: Deck,
+    start_time: datetime.datetime,
+    end_time: datetime.datetime,
+    errors: int,
+    is_inverted: bool,
 ) -> Session:
     """
     Calculates duration, creates a new session linked to a deck, and saves it.
@@ -95,6 +99,7 @@ def create_session(
         errors=errors,
         item_count=deck.item_count,
         deck_id=deck.id,
+        is_inverted=is_inverted,
     )
 
     db_session.add(new_session)
@@ -104,7 +109,7 @@ def create_session(
     return new_session
 
 
-def get_best_session(deck_id: int) -> Session | None:
+def get_best_session(deck_id: int, is_inverted: bool) -> Session | None:
     """
     Returns the session instance with the shortest duration
     for a specific deck. Returns None if no sessions exist.
@@ -112,6 +117,7 @@ def get_best_session(deck_id: int) -> Session | None:
     stmt = (
         select(Session)
         .where(Session.deck_id == deck_id)
+        .where(Session.is_inverted == is_inverted)
         .order_by(
             Session.item_count.desc(),
             Session.errors.asc(),
