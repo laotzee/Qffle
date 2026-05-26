@@ -31,21 +31,26 @@ def report_errors(error_cards: set):
         print("\n-------------------------------------")
 
 
-def compare_sessions(current_session: Session, best_session: Session):
-    """Prints a report comparing the total cards, mistakes, and duration
-    of the two sessions"""
+def compare_sessions(current_session: Session, best_session: Session | None):
+    """Returns a report that compares the total cards, mistakes, and duration
+    of the two sessions. If not best_session, the current_session is displayed
+    as the best one"""
 
-    print("---------- Current Session ----------\n")
-    print(f"Total cards: {current_session.item_count}")
-    print(f"Mistakes: {current_session.errors}")
-    print(f"Duration: {current_session.duration}\n")
+    compare_session = best_session if best_session else current_session
 
-    print("-------------------------------------")
-    print("------------ Best Session -----------\n")
-    print(f"Total cards: {best_session.item_count}")
-    print(f"Mistakes: {best_session.errors}")
-    print(f"Duration: {best_session.duration}\n")
-    print("-------------------------------------")
+    report = [
+        "---------- Current Session ----------\n",
+        f"Total cards: {current_session.item_count}\n",
+        f"Mistakes: {current_session.errors}\n",
+        f"Duration: {current_session.duration}\n",
+        "-------------------------------------\n",
+        "------------ Best Session -----------\n",
+        f"Total cards: {compare_session.item_count}\n",
+        f"Mistakes: {compare_session.errors}\n",
+        f"Duration: {compare_session.duration}\n",
+        "-------------------------------------",
+    ]
+    return "".join(report)
 
 
 def start_session(deck: Deck, deck_content: ContentDeck):
@@ -55,10 +60,12 @@ def start_session(deck: Deck, deck_content: ContentDeck):
     mistakes = 0
     pending_cards = []
     error_cards = set()
+    is_inverted = False
 
     inverse = input("(1) regular (2) inverse\n")
     if inverse == "2":
         deck_content.reverse_order()
+        is_inverted = True
 
     start = datetime.datetime.now()
     while deck_content.cards:
@@ -96,11 +103,13 @@ def start_session(deck: Deck, deck_content: ContentDeck):
         start_time=start,
         end_time=end,
         errors=len(error_cards),
+        is_inverted=is_inverted,
     )
 
-    best_session = get_best_session(deck_id=deck.id)
+    best_session = get_best_session(deck_id=deck.id, is_inverted=is_inverted)
     report_errors(error_cards)
-    compare_sessions(current_session, best_session)
+    report = compare_sessions(current_session, best_session)
+    print(report)
 
 
 def clear_screen():
