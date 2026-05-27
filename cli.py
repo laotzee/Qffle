@@ -9,7 +9,7 @@ from cards import (
     update_deck,
     get_best_session,
 )
-from db import Deck, ContentDeck, Session
+from db import Deck, ContentDeck, Session, Card
 
 
 def sort_cards(s: set) -> list:
@@ -120,22 +120,23 @@ def clear_screen():
         os.system("clear")
 
 
-args = sys.argv
-file = args[1] if len(args) > 1 else None
+if __name__ == "__main__":
+    args = sys.argv
+    file = args[1] if len(args) > 1 else None
 
-if not file:
-    file = input("Absolute path for the cards: ")
+    if not file:
+        file = input("Absolute path for the cards: ")
 
-deck_content = read_cards(file)
-if not deck_content:
-    print("File must exist and have a .csv extention")
-    exit()
+    deck_content = read_cards(file)
+    if not deck_content:
+        print("File must exist and have a .csv extention")
+        exit()
 
-deck = get_deck_by_path(file)
+    deck = get_deck_by_path(file)
 
-if deck:
-    update_deck(deck, deck_content.deck_len)
-else:
-    deck = create_deck(file, deck_content.deck_len)
+    if deck:
+        update_deck(deck, deck_content.deck_len)
+    else:
+        deck = create_deck(file, deck_content.deck_len)
 
-start_session(deck, deck_content)
+    start_session(deck, deck_content)
