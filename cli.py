@@ -34,7 +34,7 @@ def error_report(error_cards: set[Card]):
     return "".join(report)
 
 
-def compare_sessions(current_session: Session, best_session: Session | None):
+def session_report(current_session: Session, best_session: Session | None):
     """Returns a report that compares the total cards, mistakes, and duration
     of the two sessions. If not best_session, the current_session is displayed
     as the best one"""
@@ -113,7 +113,7 @@ def start_session(deck: Deck, deck_content: ContentDeck):
     best_session = get_best_session(deck_id=deck.id, is_inverted=is_inverted)
     if error_cards:
         reports.append(error_report(error_cards))
-    reports.append(compare_sessions(current_session, best_session))
+    reports.append(session_report(current_session, best_session))
 
     for report in reports:
         print(report)
