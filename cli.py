@@ -20,15 +20,18 @@ def sort_cards(s: set[Card]) -> list[Card]:
     return sorted_list
 
 
-def report_errors(error_cards: set):
-
-    if error_cards:
-        sorted_cards = sort_cards(error_cards)
-        print("Cards you may want to review for next session")
-        print("-------------------------------------\n")
-        for card in sorted_cards:
-            print(f"{card.question} -----> {card.answer}")
-        print("\n-------------------------------------")
+def error_report(error_cards: set[Card]):
+    """Returns a formatted string containing all the cards within
+    error_cards"""
+    report = [
+        "Cards you may want to review for next session",
+        "-------------------------------------\n",
+    ]
+    sorted_cards = sort_cards(error_cards)
+    for card in sorted_cards:
+        report.append(f"{card.question} -----> {card.answer}")
+    report.append("\n-------------------------------------")
+    return "".join(report)
 
 
 def compare_sessions(current_session: Session, best_session: Session | None):
@@ -59,6 +62,7 @@ def start_session(deck: Deck, deck_content: ContentDeck):
     points = 0
     mistakes = 0
     pending_cards = []
+    reports = []
     error_cards = set()
     is_inverted = False
 
@@ -107,9 +111,12 @@ def start_session(deck: Deck, deck_content: ContentDeck):
     )
 
     best_session = get_best_session(deck_id=deck.id, is_inverted=is_inverted)
-    report_errors(error_cards)
-    report = compare_sessions(current_session, best_session)
-    print(report)
+    if error_cards:
+        reports.append(error_report(error_cards))
+    reports.append(compare_sessions(current_session, best_session))
+
+    for report in reports:
+        print(report)
 
 
 def clear_screen():
