@@ -15,6 +15,7 @@ from db import Deck, ContentDeck, Session, Card
 def sort_cards(s: set[Card]) -> list[Card]:
     """Returns a list containing all the elements of a set of cards sorted
     alphabetically by their question"""
+
     sorted_list = list(s)
     sorted_list.sort(key=lambda card: card.question)
     return sorted_list
