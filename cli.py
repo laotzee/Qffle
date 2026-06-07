@@ -11,6 +11,8 @@ from cards import (
 )
 from db import Deck, ContentDeck, Session, Card
 
+SEPARATOR = "----->"
+
 
 def sort_cards(s: set[Card]) -> list[Card]:
     """Returns a list containing all the elements of a set of cards sorted
@@ -30,7 +32,7 @@ def error_report(error_cards: set[Card]):
     ]
     sorted_cards = sort_cards(error_cards)
     for card in sorted_cards:
-        report.append(f"{card.question} -----> {card.answer}")
+        report.append(f"{card.question} {SEPARATOR} {card.answer}")
     report.append("\n-------------------------------------")
     return "".join(report)
 
