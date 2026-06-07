@@ -33,3 +33,14 @@ def test_session_report(mock_sessions):
         for attr_name, label in properties_to_test:
             value = getattr(session, attr_name)
             assert f"{label} {value}" in report
+
+
+def test_error_report(mock_content_deck):
+    """Test that every piece of the report corresponds with the data inside
+    the respective sessions"""
+
+    mock_error_cards = set(mock_content_deck.cards.copy())
+    report = error_report(mock_error_cards)
+
+    for card in mock_error_cards:
+        assert f"{card.question} {SEPARATOR} {card.answer}" in report
