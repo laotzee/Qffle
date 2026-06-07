@@ -1,5 +1,10 @@
 from sqlalchemy.engine import mock
-from cli import session_report, sort_cards, session_report
+from cli import (
+    session_report,
+    sort_cards,
+    SEPARATOR,
+    error_report,
+)
 
 
 def test_sort_cards(mock_content_deck):
