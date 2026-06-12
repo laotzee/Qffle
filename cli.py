@@ -32,7 +32,7 @@ def error_report(error_cards: set[Card]):
     ]
     sorted_cards = sort_cards(error_cards)
     for card in sorted_cards:
-        report.append(f"{card.question} {SEPARATOR} {card.answer}")
+        report.append(f"{card.question} {SEPARATOR} {card.answer}\n")
     report.append("\n-------------------------------------")
     return "".join(report)
 
