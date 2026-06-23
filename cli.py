@@ -8,6 +8,7 @@ from cards import (
     create_session,
     update_deck,
     get_best_session,
+    get_last_files,
 )
 from db import Deck, ContentDeck, Session, Card
 
@@ -130,23 +131,69 @@ def clear_screen():
         os.system("clear")
 
 
+def last_files_menu() -> str | None:
+    """Returns the absolute path of the chosen file, or None if the user picks
+    an invalid option"""
+    answers = [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+    ]
+    files = get_last_files()
+    files_len = len(files)
+    valid_answers = answers[: files_len + 1]
+    last_option = files_len
+    if files:
+        print("Select a file to start:\n")
+
+        for num, file in enumerate(files):
+            print(f"{num}) {file.path}\n")
+        print(f"{last_option}) Exit\n")
+
+        option = input("")
+        print(option)
+        if option.isdigit() and option in valid_answers:
+            option = int(option)
+            if option == last_option:
+                exit()
+            else:
+                file = files[option]
+                return file.path
+        else:
+            return None
+    else:
+        pass
+
+
 if __name__ == "__main__":
     args = sys.argv
-    file = args[1] if len(args) > 1 else None
+    path = args[1] if len(args) > 1 else None
 
-    if not file:
-        file = input("Absolute path for the cards: ")
+    if not path:
+        path = last_files_menu()
 
-    deck_content = read_cards(file)
-    if not deck_content:
-        print("File must exist and have a .csv extention")
+    if path is None:
+        print("Invalid option selected")
         exit()
 
-    deck = get_deck_by_path(file)
+    deck = get_deck_by_path(path)
+    deck_content = read_cards(path)
+
+    if not deck_content:
+        print("File not found, or not properly formatted")
+        exit()
 
     if deck:
         update_deck(deck, deck_content.deck_len)
     else:
-        deck = create_deck(file, deck_content.deck_len)
+        deck = create_deck(path, deck_content.deck_len)
 
     start_session(deck, deck_content)
