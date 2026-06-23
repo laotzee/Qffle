@@ -1,7 +1,8 @@
 import csv
 import datetime
+from typing import Sequence
 from db import Deck, Card, ContentDeck, db_session
-from sqlalchemy import select
+from sqlalchemy import select, Row
 from db import Session
 
 FILE_PATH = "resources/most_used_german_words.csv"
@@ -128,6 +129,21 @@ def get_best_session(deck_id: int, is_inverted: bool) -> Session | None:
     )
 
     return db_session.execute(stmt).scalar_one_or_none()
+
+
+def get_last_files():
+    """Returns a sequence of the latest ten files open by Qffle or None"""
+    stmt = (
+        select(Deck)
+        .order_by(
+            Deck.last_visited.desc(),
+        )
+        .limit(10)
+    )
+    result = db_session.execute(stmt)
+    files = result.scalars().all()
+
+    return files
 
 
 if __name__ == "__main__":
